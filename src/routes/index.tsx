@@ -7,6 +7,7 @@ import copaBotella from "@/assets/copa-botella.jpg";
 import burrata from "@/assets/burrata.jpg";
 import clientes from "@/assets/clientes.jpg";
 import { ReservationDialog } from "@/components/ReservationDialog";
+import { Menu, X } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -15,8 +16,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Degustaciones guiadas, vinos argentinos boutique y picadas caseras en Av. de Mayo 777. Reservá por WhatsApp." },
       { property: "og:title", content: "Che Malbec — Wine Bar boutique en Buenos Aires" },
       { property: "og:description", content: "Vinos argentinos, degustaciones y momentos para compartir en pleno Buenos Aires." },
-      { property: "og:image", content: fachada },
-      { name: "twitter:image", content: fachada },
+      { property: "og:image", content: `https://che-malbec-local.vercel.app${fachada}` },
+      { name: "twitter:image", content: `https://che-malbec-local.vercel.app${fachada}` },
     ],
   }),
   component: Index,
@@ -52,6 +53,8 @@ function Index() {
   const [reservaOpen, setReservaOpen] = useState(false);
   const openReserva = () => setReservaOpen(true);
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
@@ -74,10 +77,39 @@ function Index() {
             <li><a href="#historia" className="hover:text-[color:var(--wine)] transition-colors">Historia</a></li>
             <li><a href="#ubicacion" className="hover:text-[color:var(--wine)] transition-colors">Ubicación</a></li>
           </ul>
-          <button type="button" onClick={openReserva} className="hidden items-center gap-2 rounded-full bg-[color:var(--wine)] px-5 py-2.5 text-sm font-semibold tracking-wide text-[color:var(--cream)] shadow-sm transition-all hover:bg-[color:var(--ink)] md:inline-flex">
-            <WhatsAppIcon className="h-4 w-4" /> Reservar
-          </button>
+          <div className="flex items-center gap-4">
+            <button type="button" onClick={openReserva} className="hidden items-center gap-2 rounded-full bg-[color:var(--wine)] px-5 py-2.5 text-sm font-semibold tracking-wide text-[color:var(--cream)] shadow-sm transition-all hover:bg-[color:var(--ink)] md:inline-flex">
+              <WhatsAppIcon className="h-4 w-4" /> Reservar
+            </button>
+            <button type="button" onClick={() => setMobileMenuOpen(true)} className="inline-flex items-center justify-center p-2 rounded-md text-[color:var(--ink)] hover:bg-[color:var(--ink)]/10 md:hidden" aria-label="Abrir menú">
+              <Menu className="h-6 w-6" />
+            </button>
+          </div>
         </nav>
+
+        {/* Mobile Navigation Drawer */}
+        <div className={`fixed inset-0 z-50 bg-[color:var(--ink)]/40 backdrop-blur-sm transition-opacity duration-300 md:hidden ${mobileMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`} onClick={() => setMobileMenuOpen(false)}>
+          <div className={`absolute right-0 top-0 bottom-0 w-64 bg-[color:var(--cream)] p-6 shadow-2xl transition-transform duration-300 ease-out flex flex-col justify-between ${mobileMenuOpen ? "translate-x-0" : "translate-x-full"}`} onClick={(e) => e.stopPropagation()}>
+            <div>
+              <div className="flex items-center justify-between">
+                <img src={logo} alt="Che Malbec" className="h-8 w-auto" />
+                <button type="button" onClick={() => setMobileMenuOpen(false)} aria-label="Cerrar menú">
+                  <X className="h-6 w-6 text-[color:var(--ink)]" />
+                </button>
+              </div>
+              <ul className="mt-10 space-y-6 text-base font-semibold text-[color:var(--ink)]">
+                <li><a href="#experiencia" onClick={() => setMobileMenuOpen(false)} className="block hover:text-[color:var(--wine)]">Experiencia</a></li>
+                <li><a href="#degustaciones" onClick={() => setMobileMenuOpen(false)} className="block hover:text-[color:var(--wine)]">Degustaciones</a></li>
+                <li><a href="#carta" onClick={() => setMobileMenuOpen(false)} className="block hover:text-[color:var(--wine)]">Carta</a></li>
+                <li><a href="#historia" onClick={() => setMobileMenuOpen(false)} className="block hover:text-[color:var(--wine)]">Historia</a></li>
+                <li><a href="#ubicacion" onClick={() => setMobileMenuOpen(false)} className="block hover:text-[color:var(--wine)]">Ubicación</a></li>
+              </ul>
+            </div>
+            <button type="button" onClick={() => { setMobileMenuOpen(false); openReserva(); }} className="w-full flex items-center justify-center gap-2 rounded-full bg-[color:var(--wine)] py-3 text-sm font-semibold tracking-wide text-[color:var(--cream)] shadow-sm">
+              <WhatsAppIcon className="h-4 w-4" /> Reservar
+            </button>
+          </div>
+        </div>
       </header>
 
       {/* HERO */}
@@ -356,8 +388,8 @@ function Index() {
           <div>
             <h4 className="font-serif text-sm uppercase tracking-[0.18em] text-[color:var(--gold)]">Contacto</h4>
             <ul className="mt-4 space-y-2 text-sm">
-              <li><a href={WA_URL} target="_blank" rel="noopener" className="hover:text-[color:var(--gold)]">WhatsApp: +54 9 11 2848-1233</a></li>
-              <li><a href="https://instagram.com/che.malbec" target="_blank" rel="noopener" className="hover:text-[color:var(--gold)]">Instagram: @che.malbec</a></li>
+              <li><a href={WA_URL} target="_blank" rel="noopener noreferrer" className="hover:text-[color:var(--gold)]">WhatsApp: +54 9 11 2848-1233</a></li>
+              <li><a href="https://instagram.com/che.malbec" target="_blank" rel="noopener noreferrer" className="hover:text-[color:var(--gold)]">Instagram: @che.malbec</a></li>
             </ul>
           </div>
         </div>
